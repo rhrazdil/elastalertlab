@@ -1,0 +1,49 @@
+# Example Frequency Rule
+# This rule will trigger when there are more than 5 error events in a 1-minute window
+
+name: Example Frequency Rule
+type: frequency
+index: logs-*
+doc_type: _doc
+num_events: 5
+timeframe:
+  minutes: 1
+
+realert:
+  minutes: 0
+
+# Filter for error logs
+filter:
+- term:
+    level: "error"
+
+# Alert settings
+alert:
+    -
+        post:
+            http_post_static_payload:
+                base64: eyJhZGRyZXNzZXMiOiJqYW4uY2ljdmFyZWtAYWVyby5jeiIsInN1YmplY3QiOiJXaGFsZWJvbmUgQWxlcnQ6IFNoYXJlcG9pbnQgLSBQb3NzaWJsZSBIb21vZ3JhcGggQXR0YWNrIChBRVJPIFZvZG9jaG9keSBBRVJPU1BBQ0UgYS5zLikiLCJib2R5IjoiU3BlY2lmaWVkIGRvbWFpbjogc2hhcmVwb2ludC5jb20gXG5RdWVyeTogJXF1ZXJ5JSBcblF1ZXJ5IHR5cGU6ICVxdWVyeV90eXBlJSBcblRpbWVzdGFtcDogJUB0aW1lc3RhbXAlIFxuQ2xpZW50IElQOiAlY2xpZW50JSIsImFyZ3VtZW50cyI6WyJAdGltZXN0YW1wIiwiZG9tYWluX2wyIiwicXVlcnlfdHlwZSIsInF1ZXJ5IiwiY2xpZW50Il0sImFsZXJ0X3RlbXBsYXRlX2lkIjoxMiwiYWN0aW9uIjoiZW1haWwifQ==
+    -
+        post:
+            http_post_static_payload:
+                base64: eyJhZGRyZXNzZXMiOiJnZW5uYWRpai5zdHJpb25vdkBhZXJvLmN6Iiwic3ViamVjdCI6IldoYWxlYm9uZSBBbGVydDogU2hhcmVwb2ludCAtIFBvc3NpYmxlIEhvbW9ncmFwaCBBdHRhY2sgKEFFUk8gVm9kb2Nob2R5IEFFUk9TUEFDRSBhLnMuKSIsImJvZHkiOiJTcGVjaWZpZWQgZG9tYWluOiBzaGFyZXBvaW50LmNvbSBcblF1ZXJ5OiAlcXVlcnklIFxuUXVlcnkgdHlwZTogJXF1ZXJ5X3R5cGUlIFxuVGltZXN0YW1wOiAlQHRpbWVzdGFtcCUgXG5DbGllbnQgSVA6ICVjbGllbnQlIiwiYXJndW1lbnRzIjpbIkB0aW1lc3RhbXAiLCJkb21haW5fbDIiLCJxdWVyeV90eXBlIiwicXVlcnkiLCJjbGllbnQiXSwiYWxlcnRfdGVtcGxhdGVfaWQiOjEyLCJhY3Rpb24iOiJlbWFpbCJ9
+
+http_post_url: 'http://alert-logger:8080/enqueue/alert'
+http_post_all_values: true
+
+# Alert text
+alert_text: "More than 5 error events detected in the last minutes"
+
+
+# Timestamp field
+timestamp_field: "@timestamp"
+
+# Timestamp type
+timestamp_type: "iso"
+
+# Use UTC timezone
+use_utc: true 
+
+clickhouse:
+  definitely_not_supported: true
+  surely_unknown: true

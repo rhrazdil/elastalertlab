@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.23
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - elastalert_network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.8.23
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastalert_network
+
+  elastalert:
+    image: harbor.whalebone.io/whalebone/elastalert:5
+    container_name: elastalert
+    volumes:
+      - ./elastalert_config:/opt/elastalert/config
+      - ./elastalert_rules:/opt/elastalert/rules
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastalert_network
+    command: ["elastalert", "--config", "/opt/elastalert/config/config.yaml", "--verbose"]
+
+  alert-logger:
+    build: ./alert_logger
+    container_name: alert-logger
+    ports:
+      - "8080:8080"
+    networks:
+      - elastalert_network
+    restart: always
+
+volumes:
+  elasticsearch_data:
+    driver: local
+
+networks:
+  elastalert_network:
+    driver: bridge 

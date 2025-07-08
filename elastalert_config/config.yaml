@@ -1,0 +1,74 @@
+# ElastAlert Configuration
+rules_folder: /opt/elastalert/rules
+
+# Elasticsearch host and port
+es_host: elasticsearch
+es_port: 9200
+
+# Elasticsearch index to write alerts to
+writeback_index: elastalert
+
+# Alert time limit, execution will be stopped after this time
+alert_time_limit:
+  days: 2
+
+# Run frequency in minutes
+run_every:
+  minutes: 1
+
+# Buffer time for queries, in minutes
+buffer_time:
+  minutes: 15
+
+# Realert time, in minutes
+realert:
+  minutes: 5
+
+# Maximum realert time
+max_realert:
+  hours: 24
+
+# Disable SSL verification
+verify_certs: false
+
+# Use SSL for Elasticsearch
+use_ssl: false
+
+# Elasticsearch username and password (if using security)
+# es_username: elastic
+# es_password: changeme
+
+# Alert logging
+alert_log_file: /opt/elastalert/logs/elastalert.log
+
+# Logging level
+log_level: INFO
+
+# Log format
+log_format: '%(asctime)s %(levelname)s %(name)s %(message)s'
+
+# Timestamp format
+timestamp_format: '%Y-%m-%d %H:%M:%S'
+
+# Scan subdirectories
+scan_subdirectories: false
+
+# Disable rules on error
+disable_rules_on_error: false
+
+# Notify on error
+notify_email: false
+
+# SMTP settings (if using email alerts)
+# smtp_host: localhost
+# smtp_port: 25
+# smtp_ssl: false
+# smtp_user: ''
+# smtp_pass: ''
+# from_addr: ''
+# reply_to: ''
+
+# Slack settings (if using Slack alerts)
+# slack_webhook_url: ''
+# slack_username_override: 'ElastAlert'
+# slack_emoji_override: ':warning:' 
